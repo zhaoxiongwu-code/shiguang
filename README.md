@@ -1,4 +1,4 @@
-# 时光 · 网页收藏到 GitHub
+﻿# 时光 · 网页收藏到 GitHub
 
 一个 Chrome / Edge 扩展：把当前网页的**文字和图片**存进你的 GitHub 仓库，
 每篇一目录，同时生成 Markdown 和可离线打开的 HTML。
@@ -47,7 +47,7 @@
 | 字段 | 说明 |
 | --- | --- |
 | 访问令牌 | Fine-grained token，只需勾选这一个仓库 |
-| 仓库 | `https://github.com/你的用户名/时光` |
+| 仓库 | `https://github.com/你的用户名/shiguang` |
 | 分支 | 一般 `main` |
 | 子目录 | 可选。留空则归档目录放在仓库根目录 |
 | 保存图片 | 关掉后只保留图片外链 |
@@ -57,7 +57,7 @@
 ### 创建令牌
 
 1. 打开 [Fine-grained personal access token](https://github.com/settings/personal-access-tokens/new)
-2. **Repository access** → `Only select repositories` → 勾选 `时光`
+2. **Repository access** → `Only select repositories` → 勾选 `shiguang`
 3. **Permissions → Repository permissions → Contents** → `Read and write`
 4. 生成后复制，粘进设置页
 
@@ -120,3 +120,4 @@ MV3 的 `chrome.scripting.executeScript({ func })` 只序列化函数体本身�
 - 需要登录或滚动懒加载的页面，请先滚动到想保存的位置再点保存
 - 单次收藏请求量较大时（图很多）可能碰到 GitHub 速率限制，稍等再试
 - 不抓取视频、iframe 内容
+
