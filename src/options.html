@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>时光 · 设置</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #fbf8f4; --fg: #2b2523; --muted: #7a6f68; --line: #e6ded5;
+    --accent: #c9631f; --accent-soft: #fdf0e4; --ok: #1f7a4d; --err: #b03a2e;
+    --input-bg: #fff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #17120f; --fg: #ece4dc; --muted: #a2958c; --line: #352b26;
+            --accent: #f0924a; --accent-soft: #2a1f17; --ok: #4cc38a; --err: #ff7b6b; --input-bg: #211a16; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2.5rem 1.5rem 4rem; background: var(--bg); color: var(--fg);
+    font: 14px/1.7 -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  .wrap { max-width: 40rem; margin: 0 auto; }
+  header { margin-bottom: 2rem; }
+  header h1 { font-size: 1.5rem; margin: 0 0 .25rem; letter-spacing: .02em; }
+  header p { margin: 0; color: var(--muted); }
+  .card {
+    background: var(--input-bg); border: 1px solid var(--line); border-radius: 12px;
+    padding: 1.25rem 1.35rem; margin-bottom: 1rem;
+  }
+  .card h2 { font-size: .95rem; margin: 0 0 .35rem; }
+  .card .hint { color: var(--muted); font-size: .82rem; margin: 0 0 1rem; }
+  .card .hint a { color: var(--accent); }
+  label { display: block; font-size: .82rem; color: var(--muted); margin: .85rem 0 .3rem; }
+  label:first-of-type { margin-top: 0; }
+  input[type=text], input[type=password] {
+    width: 100%; padding: .55rem .7rem; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--bg); color: var(--fg); font: inherit; font-size: .9rem;
+  }
+  input:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+  .row { display: flex; gap: .75rem; }
+  .row > div { flex: 1; }
+  .check { display: flex; align-items: flex-start; gap: .55rem; margin-top: .9rem; cursor: pointer; }
+  .check input { margin: .3rem 0 0; accent-color: var(--accent); }
+  .check span { font-size: .88rem; }
+  .check small { display: block; color: var(--muted); font-size: .78rem; }
+  .actions { display: flex; align-items: center; gap: .75rem; margin-top: 1.25rem; }
+  button {
+    font: inherit; font-size: .88rem; padding: .5rem 1.1rem; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer;
+  }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { filter: brightness(1.07); }
+  button:disabled { opacity: .55; cursor: default; }
+  .status { font-size: .85rem; min-height: 1.2em; }
+  .status.ok { color: var(--ok); }
+  .status.err { color: var(--err); }
+  .token-wrap { position: relative; }
+  .token-wrap button { position: absolute; right: .35rem; top: .28rem; padding: .25rem .6rem; font-size: .78rem; }
+  details { margin-top: 1rem; }
+  summary { cursor: pointer; font-size: .85rem; color: var(--accent); }
+  details ol { font-size: .83rem; color: var(--muted); padding-left: 1.2rem; }
+  details code { background: var(--accent-soft); padding: .1rem .35rem; border-radius: 4px; font-size: .85em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>时光</h1>
+    <p>把网页的文字和图片，存进你的 GitHub 仓库。</p>
+  </header>
+
+  <div class="card">
+    <h2>GitHub 连接</h2>
+    <p class="hint">
+      推荐用 <strong>Fine-grained token</strong>，只授权这一个仓库。
+      <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">去创建 →</a>
+    </p>
+
+    <label for="token">访问令牌（Access Token）</label>
+    <div class="token-wrap">
+      <input id="token" type="password" placeholder="github_pat_… 或 ghp_…" autocomplete="off" spellcheck="false">
+      <button id="toggleToken" type="button">显示</button>
+    </div>
+
+    <label for="repoUrl">仓库</label>
+    <input id="repoUrl" type="text" placeholder="https://github.com/你的用户名/时光" spellcheck="false">
+    <div class="row">
+      <div>
+        <label for="branch">分支</label>
+        <input id="branch" type="text" placeholder="main" spellcheck="false">
+      </div>
+      <div>
+        <label for="rootFolder">存放在子目录（可选）</label>
+        <input id="rootFolder" type="text" placeholder="留空则放在仓库根目录" spellcheck="false">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="testBtn" type="button">测试连接</button>
+      <span class="status" id="status"></span>
+    </div>
+
+    <details>
+      <summary>怎么创建令牌？</summary>
+      <ol>
+        <li>打开 <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noreferrer">Fine-grained tokens</a>，起个名字，有效期按需。</li>
+        <li>Repository access 选 <code>Only select repositories</code>，勾上 <code>时光</code>。</li>
+        <li>Permissions → Repository permissions → <code>Contents</code> 设为 <strong>Read and write</strong>。</li>
+        <li>生成后复制，粘贴到上面。令牌只保存在本机浏览器里。</li>
+      </ol>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>保存内容</h2>
+    <p class="hint">每篇会生成一个独立文件夹，包含 index.md、index.html 和 assets/ 图片。</p>
+
+    <label class="check">
+      <input id="saveImages" type="checkbox">
+      <span>把图片下载进仓库
+        <small>关闭后图片只保留原始外链，站外图片可能随时间失效。</small>
+      </span>
+    </label>
+    <label class="check">
+      <input id="saveHtml" type="checkbox">
+      <span>同时保存 index.html
+        <small>离线也能打开，保留排版。</small>
+      </span>
+    </label>
+
+    <label for="defaultTags">默认标签</label>
+    <input id="defaultTags" type="text" placeholder="逗号分隔，例如：待读, 技术">
+  </div>
+
+  <div class="actions">
+    <button class="primary" id="saveBtn" type="button">保存设置</button>
+    <span class="status" id="saveStatus"></span>
+  </div>
+</div>
+
+<script type="module" src="options.js"></script>
+</body>
+</html>
